@@ -26,7 +26,7 @@ tmp_dir = "tmp"
   send_interrupt = false
   stop_on_error = false
 
-[color]
+[color] 
   app = ""
   build = "yellow"
   main = "magenta"
