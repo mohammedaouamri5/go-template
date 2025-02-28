@@ -4,8 +4,8 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  bin = "./tmp/main" 
-  cmd = "./build.sh "
+  bin = "./tmp/main"
+  cmd = "./build.sh" 
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []
@@ -14,25 +14,25 @@ tmp_dir = "tmp"
   follow_symlink = false
   full_bin = ""
   include_dir = []
-  include_ext = ["go", "tpl", "sql", "tmpl", "html"]
+  include_ext = ["sh" , "go", "tpl", "tmpl", "html" , "env" , ".air.toml" ,"toml"]
   include_file = []
   kill_delay = "0s"
-  poll = false
+  log = "build-errors.log"
+  poll = false 
   poll_interval = 0
   post_cmd = []
-  pre_cmd = []
+  pr_cmd = []
   rerun = false
   rerun_delay = 500
   send_interrupt = false
   stop_on_error = false
 
-[color] 
+[color]
   app = ""
   build = "yellow"
   main = "magenta"
   runner = "green"
   watcher = "cyan"
-  
 
 [log]
   main_only = false
