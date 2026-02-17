@@ -1,49 +1,53 @@
 #!/bin/bash
+set -euo pipefail
 
+# ── Paths ──────────────────────────────────────────────────────────────────────
+readonly BINARY="tmp/main"
+readonly BUILD_LOG="tmp/build.log"
+readonly RUN_LOG="tmp/run.log"
 
+# ── Helpers ────────────────────────────────────────────────────────────────────
+log()     { echo "── $* ──────────────────────────────────────────"; }
+success() { echo -e "\033[32m$*\033[0m"; }
+error()   { echo -e "\033[31m$*\033[0m" >&2; }
 
+# ── Build ──────────────────────────────────────────────────────────────────────
+build() {
+    mkdir -p tmp
 
-# Define paths for binaries and logs
-BINARY="tmp/main"
-BUILD_LOG="tmp/build.log"
-RUN_LOG="tmp/run.log"
+    log "Formatting code"
+    go fmt ./...
 
-# Function to build the project
-function build() {
-    echo "----------------------------------"
-    echo "Building the project..."
-    
+    log "Tidying modules"
+    go mod tidy
 
-    # Run go build and redirect output to the build log
+    log "Updating dependencies"
+    go get -u ./...
+
+    log "Building"
     if go build -o "$BINARY" . > "$BUILD_LOG" 2>&1; then
-        echo "Build succeeded."
-        echo "
-|----------------------------------------|
-|                                        |
-|        Cool evry thing is ok ✅        |
-|                                        |
-|----------------------------------------|
-
-        " > "$BUILD_LOG" 2>&1
+        success "
+    |------------------------------------------|
+    |                                          |
+    |         Cool everything is ok ✅         |
+    |                                          |
+    |------------------------------------------| "
+        tee -a "$BUILD_LOG" <<< "Build succeeded."
     else
-        echo "Build failed. Check $BUILD_LOG for details."
+        error "Build failed. See log below:"
+        bat --paging=never --color=always "$BUILD_LOG"
+        return 1
     fi
 }
 
-# Function to clean up previous build artifacts
-function clean() {
-    echo "----------------------------------"
-    echo "Cleaning up..."
-
-    # Remove the binary
+# ── Clean ──────────────────────────────────────────────────────────────────────
+clean() {
+    log "Cleaning up"
     rm -rfv "$BINARY"
-
-    # Clear log files
-    echo "---------------------------------------------" > "$BUILD_LOG"
-    echo "---------------------------------------------"  > "$RUN_LOG"
+    : > "$BUILD_LOG"
+    : > "$RUN_LOG"
 }
 
-
-# Run the clean and build steps
+# ── Main ───────────────────────────────────────────────────────────────────────
 clean
 build

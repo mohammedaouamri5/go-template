@@ -7,9 +7,12 @@
 *.dll
 *.so
 *.dylib
-tmp 
+
+tmp/*
+
 # Test binary, built with `go test -c`
 *.test
+test/*
 LOG/*.LOG
 !LOG
 
